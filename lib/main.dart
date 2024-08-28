@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Chef GPT',
-      locale: const Locale('es'), // Default locale
+      locale: const Locale('en'), // Default locale
       supportedLocales: const [
         Locale('en', ''), // English
         Locale('es', ''), // Spanish
