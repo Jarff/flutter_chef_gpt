@@ -1,5 +1,4 @@
-import 'package:chef_gpt/models/Ingredient.dart';
-import 'package:chef_gpt/models/Recipe.dart';
+import 'package:chef_gpt/core/domain/entities/ingredient.dart';
 import 'package:flutter/material.dart';
 
 class IngredientList extends StatelessWidget {

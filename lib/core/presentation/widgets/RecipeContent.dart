@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:chef_gpt/models/Recipe.dart';
-import 'package:chef_gpt/presentation/widgets/lists/ingredient_list.dart';
-import 'package:chef_gpt/presentation/widgets/lists/instruction_list.dart';
+import 'package:chef_gpt/core/domain/entities/recipe.dart';
+import 'package:chef_gpt/core/infrastructure/models/recipe_model.dart';
+import 'package:chef_gpt/core/presentation/widgets/lists/ingredient_list.dart';
+import 'package:chef_gpt/core/presentation/widgets/lists/instruction_list.dart';
 import 'package:chef_gpt/utils/AppLocalizations.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,7 +61,8 @@ class _RecipeContentState extends State<RecipeContent> {
                   // And remove it...
                   if (favorites != null) {
                     favorites.removeWhere((element) =>
-                        (Recipe.fromJson(jsonDecode(element))).id == curId);
+                        (RecipeModel.fromJson(jsonDecode(element))).id ==
+                        curId);
                     prefs.setStringList('favorites', favorites);
                   }
                   setState(() {
@@ -73,9 +75,12 @@ class _RecipeContentState extends State<RecipeContent> {
                     widget.recipe.isFavorite = !widget.recipe.isFavorite;
                   });
                   if (favorites != null) {
-                    favorites.add(jsonEncode(widget.recipe!.toJson()));
+                    favorites.add(jsonEncode(
+                        RecipeModel.fromEntity(widget.recipe).toJson()));
                   } else {
-                    favorites = [jsonEncode(widget.recipe!.toJson())];
+                    favorites = [
+                      jsonEncode(RecipeModel.fromEntity(widget.recipe).toJson())
+                    ];
                   }
                   // Set the list to favorites
                   prefs.setStringList('favorites', favorites);

@@ -1,4 +1,4 @@
-import 'package:chef_gpt/presentation/favorites.dart';
+import 'package:chef_gpt/core/presentation/pages/favorites_page.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:chef_gpt/presentation/widgets/ChipsInputEditingController.dart';
+import 'package:chef_gpt/core/presentation/widgets/ChipsInputEditingController.dart';
 import 'package:flutter/material.dart';
 
 class ChipsInput<T> extends StatefulWidget {

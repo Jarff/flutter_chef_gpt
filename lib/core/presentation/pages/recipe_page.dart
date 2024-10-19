@@ -1,16 +1,12 @@
 import 'dart:convert';
-
+import 'package:chef_gpt/core/domain/entities/recipe.dart';
 import 'package:chef_gpt/generate_prompt.dart';
-import 'package:chef_gpt/models/Ingredient.dart';
-import 'package:chef_gpt/models/Recipe.dart';
-import 'package:chef_gpt/presentation/widgets/PreparingRecipe.dart';
-import 'package:chef_gpt/presentation/widgets/RecipeContent.dart';
+import 'package:chef_gpt/core/infrastructure/models/recipe_model.dart';
+import 'package:chef_gpt/core/presentation/widgets/PreparingRecipe.dart';
+import 'package:chef_gpt/core/presentation/widgets/RecipeContent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
-import 'package:uuid/v1.dart';
 
 class RecipePage extends StatefulWidget {
   Map<String, dynamic> configuration;
@@ -36,7 +32,7 @@ class _RecipePageState extends State<RecipePage> {
                     elevation: 0,
                     backgroundColor: Colors.black,
                     leading: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_back,
                         color: Colors.white,
                       ),
@@ -48,7 +44,8 @@ class _RecipePageState extends State<RecipePage> {
                   ),
                   body: Container(
                     color: Colors.black,
-                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 20),
                     child: SafeArea(
                       child: Container(
                         width: MediaQuery.of(context).size.width,
@@ -72,6 +69,8 @@ class _RecipePageState extends State<RecipePage> {
     );
   }
 
+  // THIS CODE SHOULD BE MOVED TO A REPOSITORY!!!
+  // TODO:
   Future<Recipe?> _getRecipe() async {
     String apiKey = dotenv.env['GEMINI_API_KEY'] ?? "";
 
@@ -89,9 +88,8 @@ class _RecipePageState extends State<RecipePage> {
     } else {
       String cleanedText =
           response.text!.replaceAll('```json', '').replaceAll('```', '').trim();
-
       try {
-        return Recipe.fromJson(jsonDecode(cleanedText));
+        return RecipeModel.fromJson(jsonDecode(cleanedText));
       } catch (e) {
         print("Error decoding JSON in RecipePage: Something went wrong: $e");
         return null;

@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:chef_gpt/models/Recipe.dart';
-import 'package:chef_gpt/presentation/widgets/RecipeContent.dart';
+import 'package:chef_gpt/core/domain/entities/recipe.dart';
+import 'package:chef_gpt/core/infrastructure/models/recipe_model.dart';
+import 'package:chef_gpt/core/presentation/widgets/RecipeContent.dart';
 import 'package:chef_gpt/utils/AppLocalizations.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -115,7 +116,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
     if (tmp != null) {
       for (var element in tmp) {
-        favorites.add(Recipe.fromJson(jsonDecode(element)));
+        favorites.add(RecipeModel.fromJson(jsonDecode(element)) as Recipe);
       }
     }
     return favorites;

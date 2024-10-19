@@ -1,5 +1,4 @@
-import 'package:chef_gpt/models/Instruction.dart';
-import 'package:chef_gpt/models/Recipe.dart';
+import 'package:chef_gpt/core/domain/entities/instruction.dart';
 import 'package:flutter/material.dart';
 
 class InstructionList extends StatelessWidget {

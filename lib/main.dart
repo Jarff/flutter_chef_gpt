@@ -1,4 +1,4 @@
-import 'package:chef_gpt/presentation/home.dart';
+import 'package:chef_gpt/core/presentation/pages/home_page.dart';
 import 'package:chef_gpt/utils/AppLocalizations.dart';
 import 'package:dart_openai/dart_openai.dart';
 import 'package:flutter/material.dart';
