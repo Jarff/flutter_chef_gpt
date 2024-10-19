@@ -8,4 +8,12 @@ class Instruction {
     return Instruction(
         step: json['step'] as int, description: json['description'] as String);
   }
+
+  // Convert the instance back to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'step': step,
+      'description': description,
+    };
+  }
 }

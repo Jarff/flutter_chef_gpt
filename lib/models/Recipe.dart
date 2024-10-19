@@ -2,6 +2,7 @@ import 'package:chef_gpt/models/Ingredient.dart';
 import 'package:chef_gpt/models/Instruction.dart';
 
 class Recipe {
+  String? id;
   final String title;
   final String description;
   final int people;
@@ -14,8 +15,10 @@ class Recipe {
   final Map<String, dynamic> macros;
   final List<Ingredient> ingredients;
   final List<Instruction> instructions;
+  bool isFavorite = false;
 
   Recipe({
+    this.id,
     required this.title,
     required this.description,
     required this.people,
@@ -28,6 +31,7 @@ class Recipe {
     required this.macros,
     required this.ingredients,
     required this.instructions,
+    this.isFavorite = false,
   });
 
   // Factory constructor to create an instance from a JSON map
@@ -49,12 +53,14 @@ class Recipe {
       instructions: (json['instructions'] as List<dynamic>)
           .map((element) => Instruction.fromJson(element))
           .toList(),
+      isFavorite: json['isFavorite'] ?? false,
     );
   }
 
   // Convert the instance back to JSON
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'title': title,
       'description': description,
       'people': people,
@@ -65,8 +71,9 @@ class Recipe {
       'paleo': paleo,
       'calories': calories,
       'macros': macros,
-      'ingredients': ingredients,
-      'instructions': instructions,
+      'ingredients': ingredients.map((element) => element.toJson()).toList(),
+      'instructions': instructions.map((element) => element.toJson()).toList(),
+      'isFavorite': isFavorite,
     };
   }
 }

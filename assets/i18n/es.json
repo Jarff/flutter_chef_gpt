@@ -1,5 +1,5 @@
 {
-    "Recipe Generator powered by Google and GeminiAI": "Generador de Recetas impulsado por Google y GeminiAI",
+    "Recipe Generator Powered By Embercom": "Generador de Recetas impulsado por Embercom",
     "What ingregients are in your arsenal?": "¿Qué ingredientes tienes en tu arsenal?",
     "Search for toppings": "Busca coberturas",
     "Separate each ingredient with a comma": "Separa cada ingrediente con una coma (,)",
@@ -25,5 +25,6 @@
     "Instructions": "Instrucciones",
     "Missing information": "Falta información",
     "¡Aguarda!": "¡Aguarda!",
-    "We are preparing the recipe based on your needs": "Estamos preparando la receta ideal basado en tus necesidades"
+    "We are preparing the recipe based on your needs": "Estamos preparando la receta ideal basado en tus necesidades",
+    "Favorites": "Favoritos"
 }

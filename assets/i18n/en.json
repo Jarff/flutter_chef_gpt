@@ -1,5 +1,5 @@
 {
-    "Recipe Generator powered by Google and GeminiAI": "Recipe Generator powered by Google and GeminiAI",
+    "Recipe Generator Powered By Embercom": "Recipe Generator Powered By Embercom",
     "What ingregients are in your arsenal?": "What ingregients are in your arsenal?",
     "Search for toppings": "Search for toppings",
     "Separate each ingredient with a comma": "Separate each ingredient with a comma (,)",
@@ -25,5 +25,6 @@
     "Instructions": "Instructions",
     "Missing information": "Missing information",
     "¡Hang on!": "¡Hang on!",
-    "We are preparing the recipe based on your needs": "We are preparing the recipe based on your needs"
+    "We are preparing the recipe based on your needs": "We are preparing the recipe based on your needs",
+    "Favorites": "Favorites"
 }

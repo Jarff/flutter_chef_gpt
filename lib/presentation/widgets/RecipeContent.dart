@@ -1,16 +1,94 @@
+import 'dart:convert';
+
 import 'package:chef_gpt/models/Recipe.dart';
 import 'package:chef_gpt/presentation/widgets/lists/ingredient_list.dart';
 import 'package:chef_gpt/presentation/widgets/lists/instruction_list.dart';
 import 'package:chef_gpt/utils/AppLocalizations.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
-class RecipeContent extends StatelessWidget {
+class RecipeContent extends StatefulWidget {
   Recipe recipe;
   RecipeContent({super.key, required this.recipe});
 
   @override
+  State<RecipeContent> createState() => _RecipeContentState();
+}
+
+class _RecipeContentState extends State<RecipeContent> {
+  Uuid? uuid;
+  String? curId;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    uuid = const Uuid();
+    curId = uuid?.v1();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.black,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.of(context)
+                .pop(); // Navigates back to the previous screen
+          },
+        ),
+        actions: [
+          IconButton(
+              onPressed: () async {
+                // Obtain shared preferences.
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+
+                List<String>? favorites = prefs.getStringList('favorites');
+                // prefs.remove('favorites');
+                favorites = [];
+
+                if (widget.recipe.isFavorite) {
+                  // Loop through the favorites find the one with the ID
+                  // And remove it...
+                  if (favorites != null) {
+                    favorites.removeWhere((element) =>
+                        (Recipe.fromJson(jsonDecode(element))).id == curId);
+                    prefs.setStringList('favorites', favorites);
+                  }
+                  setState(() {
+                    widget.recipe.isFavorite = !widget.recipe.isFavorite;
+                  });
+                } else {
+                  // We set a unique ID to the recipe
+                  widget.recipe.id = curId;
+                  setState(() {
+                    widget.recipe.isFavorite = !widget.recipe.isFavorite;
+                  });
+                  if (favorites != null) {
+                    favorites.add(jsonEncode(widget.recipe!.toJson()));
+                  } else {
+                    favorites = [jsonEncode(widget.recipe!.toJson())];
+                  }
+                  // Set the list to favorites
+                  prefs.setStringList('favorites', favorites);
+                }
+              },
+              icon: Icon(
+                widget.recipe.isFavorite
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+                color: Colors.white,
+              ))
+        ],
+      ),
       body: Container(
         color: Colors.black,
         padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
@@ -20,14 +98,14 @@ class RecipeContent extends StatelessWidget {
             child: ListView(
               children: [
                 Text(
-                  recipe.title,
+                  widget.recipe.title,
                   style: Theme.of(context).textTheme.displayMedium,
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 Text(
-                  recipe.description,
+                  widget.recipe.description,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(
@@ -65,7 +143,7 @@ class RecipeContent extends StatelessWidget {
                                   width: 10,
                                 ),
                                 Text(
-                                    "${recipe.cookingTime.toString()} ${AppLocalizations.of(context).translate('minutes')}")
+                                    "${widget.recipe.cookingTime.toString()} ${AppLocalizations.of(context).translate('minutes')}")
                               ],
                             ),
                           ),
@@ -80,7 +158,7 @@ class RecipeContent extends StatelessWidget {
                                   width: 10,
                                 ),
                                 Text(AppLocalizations.of(context)
-                                    .translate(recipe.difficulty))
+                                    .translate(widget.recipe.difficulty))
                               ],
                             ),
                           ),
@@ -103,7 +181,7 @@ class RecipeContent extends StatelessWidget {
                                   width: 10,
                                 ),
                                 Text(
-                                    "${recipe.people.toString()} ${AppLocalizations.of(context).translate('servings')}")
+                                    "${widget.recipe.people.toString()} ${AppLocalizations.of(context).translate('servings')}")
                               ],
                             ),
                           ),
@@ -118,7 +196,7 @@ class RecipeContent extends StatelessWidget {
                                   width: 10,
                                 ),
                                 Text(
-                                    "${recipe.calories.toString()} ${AppLocalizations.of(context).translate('calories')}")
+                                    "${widget.recipe.calories.toString()} ${AppLocalizations.of(context).translate('calories')}")
                               ],
                             ),
                           ),
@@ -138,7 +216,7 @@ class RecipeContent extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                IngredientList(ingredients: recipe.ingredients),
+                IngredientList(ingredients: widget.recipe.ingredients),
                 const SizedBox(
                   height: 20,
                 ),
@@ -150,7 +228,7 @@ class RecipeContent extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                InstructionList(instructions: recipe.instructions)
+                InstructionList(instructions: widget.recipe.instructions)
               ],
             ),
           ),

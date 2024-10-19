@@ -1,5 +1,7 @@
 import 'package:chef_gpt/generate_prompt.dart';
+import 'package:chef_gpt/presentation/favorites.dart';
 import 'package:chef_gpt/presentation/recipe.dart';
+import 'package:chef_gpt/presentation/widgets/AppDrawer.dart';
 import 'package:chef_gpt/presentation/widgets/ChipsInput.dart';
 import 'package:chef_gpt/presentation/widgets/DietRestriction.dart';
 import 'package:chef_gpt/presentation/widgets/SelectPeopleButton.dart';
@@ -29,10 +31,27 @@ class HomePageState extends State<HomePage> {
   bool vegan = false;
   bool paleo = false;
   String difficulty = "Novice";
+  // Create a GlobalKey for the Scaffold
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.menu,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            // Use the key to open the drawer
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+      ),
+      drawer: const AppDrawer(),
       body: Container(
         color: Colors.black,
         child: SafeArea(
@@ -47,8 +66,8 @@ class HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.symmetric(vertical: 50),
                 child: Center(
                     child: Text(
-                  AppLocalizations.of(context).translate(
-                      "Recipe Generator powered by Google and GeminiAI"),
+                  AppLocalizations.of(context)
+                      .translate("Recipe Generator Powered By Embercom"),
                   style: Theme.of(context).textTheme.displayMedium,
                   textAlign: TextAlign.center,
                 )),

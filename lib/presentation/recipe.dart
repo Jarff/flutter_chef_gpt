@@ -8,6 +8,9 @@ import 'package:chef_gpt/presentation/widgets/RecipeContent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+import 'package:uuid/v1.dart';
 
 class RecipePage extends StatefulWidget {
   Map<String, dynamic> configuration;
@@ -19,40 +22,30 @@ class RecipePage extends StatefulWidget {
 
 class _RecipePageState extends State<RecipePage> {
   String? title;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.black,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.of(context)
-                .pop(); // Navigates back to the previous screen
-          },
-        ),
-        actions: [
-          IconButton(
-              onPressed: () => print("Saving to shared preferences"),
-              icon: Icon(Icons.favorite_border))
-        ],
-      ),
       body: FutureBuilder(
           future: _getRecipe(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.data == null) {
                 return Scaffold(
+                  appBar: AppBar(
+                    elevation: 0,
+                    backgroundColor: Colors.black,
+                    leading: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pop(); // Navigates back to the previous screen
+                      },
+                    ),
+                  ),
                   body: Container(
                     color: Colors.black,
                     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
