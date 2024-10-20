@@ -9,6 +9,9 @@ Run the:
 
 `flutter pub run intl_utils:generate`
 
+Run to update freezed classes:
+`flutter pub run build_runner watch --delete-conflicting-outputs`
+
 command to generate localization classes.
 
 ## Prompt Generator
