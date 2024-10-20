@@ -5,19 +5,33 @@ import 'package:chef_gpt/core/infrastructure/models/ingredient_model.dart';
 import 'package:chef_gpt/core/infrastructure/models/instruction_model.dart';
 
 class RecipeModel implements Recipe {
+  @override
   String? id;
+  @override
   final String title;
+  @override
   final String description;
+  @override
   final int people;
+  @override
   final String difficulty;
+  @override
   final int cookingTime;
+  @override
   final String lowCalorie;
+  @override
   final String vegan;
+  @override
   final String paleo;
+  @override
   final int calories;
+  @override
   final Map<String, dynamic> macros;
+  @override
   final List<Ingredient> ingredients;
+  @override
   final List<Instruction> instructions;
+  // @override
   bool isFavorite = false;
 
   RecipeModel({
