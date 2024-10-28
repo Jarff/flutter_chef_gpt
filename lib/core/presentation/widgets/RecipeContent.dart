@@ -1,17 +1,16 @@
-import 'dart:convert';
-
+import 'package:chef_gpt/core/application/bloc/recipe_favorites/recipefavorite_bloc.dart';
+import 'package:chef_gpt/core/application/bloc/recipe_favorites/recipefavorite_state.dart';
 import 'package:chef_gpt/core/domain/entities/recipe.dart';
-import 'package:chef_gpt/core/infrastructure/models/recipe_model.dart';
 import 'package:chef_gpt/core/presentation/widgets/lists/ingredient_list.dart';
 import 'package:chef_gpt/core/presentation/widgets/lists/instruction_list.dart';
 import 'package:chef_gpt/utils/AppLocalizations.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
 class RecipeContent extends StatefulWidget {
-  Recipe recipe;
-  RecipeContent({super.key, required this.recipe});
+  final Recipe recipe;
+  const RecipeContent({super.key, required this.recipe});
 
   @override
   State<RecipeContent> createState() => _RecipeContentState();
@@ -23,7 +22,6 @@ class _RecipeContentState extends State<RecipeContent> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     uuid = const Uuid();
     curId = uuid?.v1();
@@ -36,7 +34,7 @@ class _RecipeContentState extends State<RecipeContent> {
         elevation: 0,
         backgroundColor: Colors.black,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
           ),
@@ -46,52 +44,25 @@ class _RecipeContentState extends State<RecipeContent> {
           },
         ),
         actions: [
-          IconButton(
-              onPressed: () async {
-                // Obtain shared preferences.
-                final SharedPreferences prefs =
-                    await SharedPreferences.getInstance();
-
-                List<String>? favorites = prefs.getStringList('favorites');
-                // prefs.remove('favorites');
-                favorites = [];
-
-                if (widget.recipe.isFavorite) {
-                  // Loop through the favorites find the one with the ID
-                  // And remove it...
-                  if (favorites != null) {
-                    favorites.removeWhere((element) =>
-                        (RecipeModel.fromJson(jsonDecode(element))).id ==
-                        curId);
-                    prefs.setStringList('favorites', favorites);
-                  }
-                  setState(() {
-                    widget.recipe.isFavorite = !widget.recipe.isFavorite;
-                  });
-                } else {
-                  // We set a unique ID to the recipe
-                  widget.recipe.id = curId;
-                  setState(() {
-                    widget.recipe.isFavorite = !widget.recipe.isFavorite;
-                  });
-                  if (favorites != null) {
-                    favorites.add(jsonEncode(
-                        RecipeModel.fromEntity(widget.recipe).toJson()));
+          BlocBuilder<RecipeFavoriteBloc, RecipeFavoriteState>(
+              builder: (context, state) {
+            return IconButton(
+                onPressed: () {
+                  if (state.isFavorite) {
+                    context
+                        .read<RecipeFavoriteBloc>()
+                        .removeFavorite(widget.recipe);
                   } else {
-                    favorites = [
-                      jsonEncode(RecipeModel.fromEntity(widget.recipe).toJson())
-                    ];
+                    context
+                        .read<RecipeFavoriteBloc>()
+                        .addFavorite(widget.recipe);
                   }
-                  // Set the list to favorites
-                  prefs.setStringList('favorites', favorites);
-                }
-              },
-              icon: Icon(
-                widget.recipe.isFavorite
-                    ? Icons.favorite
-                    : Icons.favorite_border,
-                color: Colors.white,
-              ))
+                },
+                icon: Icon(
+                  state.isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: Colors.white,
+                ));
+          })
         ],
       ),
       body: Container(
@@ -131,7 +102,7 @@ class _RecipeContentState extends State<RecipeContent> {
                         AppLocalizations.of(context).translate("Overview"),
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       Row(
@@ -182,7 +153,7 @@ class _RecipeContentState extends State<RecipeContent> {
                                   Icons.people,
                                   color: Colors.white.withOpacity(.5),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 Text(
@@ -197,7 +168,7 @@ class _RecipeContentState extends State<RecipeContent> {
                                   Icons.fireplace,
                                   color: Colors.white.withOpacity(.5),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 10,
                                 ),
                                 Text(
