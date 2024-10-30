@@ -1,10 +1,16 @@
 import 'dart:convert';
 
+import 'package:chef_gpt/core/application/bloc/favorites/favoritepage_bloc.dart';
+import 'package:chef_gpt/core/application/bloc/favorites/favoritepage_state.dart';
+import 'package:chef_gpt/core/application/bloc/recipe_favorites/recipefavorite_bloc.dart';
 import 'package:chef_gpt/core/domain/entities/recipe.dart';
 import 'package:chef_gpt/core/infrastructure/models/recipe_model.dart';
+import 'package:chef_gpt/core/infrastructure/repositories/favorite_repository_impl.dart';
 import 'package:chef_gpt/core/presentation/widgets/RecipeContent.dart';
+import 'package:chef_gpt/core/presentation/widgets/lists/favorites/favorites_list.dart';
 import 'package:chef_gpt/utils/AppLocalizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FavoritesPage extends StatefulWidget {
@@ -15,6 +21,13 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Dispatch fetchFavorites event when the page is initialized...
+    context.read<FavoriteRecipePageBloc>().fetchFavorites();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,94 +44,25 @@ class _FavoritesPageState extends State<FavoritesPage> {
                 .pop(); // Navigates back to the previous screen
           },
         ),
-        // title: Text(
-        //   "Favorites",
-        //   style: TextStyle(color: Colors.white),
-        // ),
         title: Text(
           AppLocalizations.of(context).translate("Favorites"),
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
-      body: FutureBuilder(
-        future: _getFavorites(),
-        builder: (context, snapshot) {
-          if (snapshot.data != null) {
-            return Scaffold(
-              body: Container(
-                color: Colors.black,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                child: SafeArea(
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: ListView.builder(
-                        itemCount: snapshot.data?.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            padding:
-                                EdgeInsets.only(top: 5, bottom: 5, right: 10),
-                            // color: Color.fromARGB(255, 28, 32, 35),
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 28, 32, 35),
-                              // border: Border.all(color: Colors.white, width: 1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              children: [
-                                Flexible(
-                                  child: ListTile(
-                                    title: Text(
-                                      snapshot.data![index].title,
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    onTap: () async {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => RecipeContent(
-                                            recipe: snapshot.data![index],
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.white,
-                                  size: 15,
-                                )
-                              ],
-                            ),
-                          );
-                        }),
-                  ),
-                ),
-              ),
-            );
-          } else {
-            return Center(
-                child: Text(
-              "Aun no hay recetas guardadas",
-              style: TextStyle(color: Colors.white),
-            ));
-          }
+      body: BlocBuilder<FavoriteRecipePageBloc, FavoritepageState>(
+        builder: (context, state) {
+          return state.when(
+            initial: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            loaded: (List<Recipe> favorites) => FavoriteList(
+              favorites: favorites,
+              refreshList: () =>
+                  context.read<FavoriteRecipePageBloc>().refreshFavorites(),
+            ),
+            error: () => const Text("Something went wrong"),
+          );
         },
       ),
     );
-  }
-
-  Future<List<Recipe>> _getFavorites() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? tmp = prefs.getStringList('favorites');
-    List<Recipe> favorites = [];
-
-    if (tmp != null) {
-      for (var element in tmp) {
-        favorites.add(RecipeModel.fromJson(jsonDecode(element)) as Recipe);
-      }
-    }
-    return favorites;
   }
 }

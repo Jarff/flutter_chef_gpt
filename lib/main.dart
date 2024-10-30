@@ -1,4 +1,6 @@
+import 'package:chef_gpt/core/application/bloc/favorites/favoritepage_bloc.dart';
 import 'package:chef_gpt/core/application/bloc/recipe_page/recipepage_bloc.dart';
+import 'package:chef_gpt/core/infrastructure/repositories/favorite_repository_impl.dart';
 import 'package:chef_gpt/core/infrastructure/repositories/recipe_repository_impl.dart';
 import 'package:chef_gpt/core/presentation/pages/home_page.dart';
 import 'package:chef_gpt/utils/AppLocalizations.dart';
@@ -23,6 +25,10 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<RecipePageBloc>(
           create: (context) => RecipePageBloc(RecipeRepositoryImpl()),
+        ),
+        BlocProvider<FavoriteRecipePageBloc>(
+          create: (context) => FavoriteRecipePageBloc(
+              favoriteRepository: FavoriteRepositoryImpl()),
         ),
       ],
       child: MaterialApp(

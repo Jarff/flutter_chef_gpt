@@ -54,6 +54,7 @@ class RecipeModel implements Recipe {
   // Factory constructor to create an instance from a JSON map
   factory RecipeModel.fromJson(Map<String, dynamic> json) {
     return RecipeModel(
+      id: json['id'] ?? "",
       title: json['title'] as String,
       description: json['description'] as String,
       people: json['people'] as int,

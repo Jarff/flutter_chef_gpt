@@ -10,7 +10,8 @@ import 'package:uuid/uuid.dart';
 
 class RecipeContent extends StatefulWidget {
   final Recipe recipe;
-  const RecipeContent({super.key, required this.recipe});
+  final Function? refreshList;
+  const RecipeContent({super.key, required this.recipe, this.refreshList});
 
   @override
   State<RecipeContent> createState() => _RecipeContentState();
@@ -19,13 +20,6 @@ class RecipeContent extends StatefulWidget {
 class _RecipeContentState extends State<RecipeContent> {
   Uuid? uuid;
   String? curId;
-
-  @override
-  void initState() {
-    super.initState();
-    uuid = const Uuid();
-    curId = uuid?.v1();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +50,9 @@ class _RecipeContentState extends State<RecipeContent> {
                     context
                         .read<RecipeFavoriteBloc>()
                         .addFavorite(widget.recipe);
+                  }
+                  if (widget.refreshList != null) {
+                    widget.refreshList!();
                   }
                 },
                 icon: Icon(

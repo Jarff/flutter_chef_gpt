@@ -2,7 +2,6 @@ import 'package:chef_gpt/core/application/bloc/recipe_page/recipepage_event.dart
 import 'package:chef_gpt/core/application/bloc/recipe_page/recipepage_state.dart';
 import 'package:chef_gpt/core/domain/entities/recipe.dart';
 import 'package:chef_gpt/core/domain/repositories/repositories.dart';
-import 'package:chef_gpt/core/infrastructure/repositories/recipe_repository_impl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RecipePageBloc extends Bloc<RecipePageEvent, RecipepageState> {

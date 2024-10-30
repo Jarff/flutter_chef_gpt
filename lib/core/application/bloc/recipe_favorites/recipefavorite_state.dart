@@ -9,4 +9,7 @@ class RecipeFavoriteState with _$RecipeFavoriteState {
 
   factory RecipeFavoriteState.initial() =>
       RecipeFavoriteState(isFavorite: false);
+
+  factory RecipeFavoriteState.isFavorite({required bool value}) =>
+      RecipeFavoriteState(isFavorite: value);
 }
